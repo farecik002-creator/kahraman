@@ -13,6 +13,8 @@ import {
   isAdjacent,
   calculateEffects,
   getEnemy,
+  XP_PER_MATCH,
+  getXpRequired,
   Effects,
 } from '../constants/gameData';
 
