@@ -40,7 +40,7 @@ export default function GameScreen() {
   const STATS_H = 76; // Slightly increased for padding
   const TITLE_H = 36;
   const SKILLS_H = 68;
-  const GAP_TOTAL = 12 * 5; // Increased gap for vertical expansion
+  const GAP_TOTAL = 18 * 5; // Final adjustment for alignment
   const charHeight = height - topInset - bottomInset - TITLE_H - ENEMY_H - MSG_H - STATS_H - GAP_TOTAL;
   // Grid height will now be controlled by charHeight to match CharacterPanel
   const gridHeight = charHeight; 

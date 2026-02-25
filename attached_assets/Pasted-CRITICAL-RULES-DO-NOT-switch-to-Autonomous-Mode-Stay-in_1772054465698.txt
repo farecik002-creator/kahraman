@@ -1,0 +1,158 @@
+CRITICAL RULES:
+
+DO NOT switch to Autonomous Mode.
+Stay in manual mode.
+Do NOT refactor the project.
+Do NOT change folder structure.
+Do NOT rename files.
+Do NOT change backend.
+Do NOT modify core mechanics.
+Do NOT alter damage formulas.
+Do NOT change combo logic calculation.
+Do NOT touch navigation.
+Do NOT rewrite state management.
+
+The game mechanics must remain EXACTLY the same.
+
+--------------------------------------------------
+PHASE 1 — FIX PREVIEW
+--------------------------------------------------
+
+The preview currently shows “Something went wrong”.
+
+Without changing the project structure,
+find the root cause and fix it.
+
+Do not ask for instructions.
+Do not change architecture.
+Solve it safely and minimally.
+
+Preview must load successfully before continuing.
+
+--------------------------------------------------
+PHASE 2 — AAA VISUAL & ANIMATION UPGRADE
+--------------------------------------------------
+
+Only improve visuals and animation layers.
+Attach animations AFTER logic triggers.
+Never modify core gameplay logic.
+
+-------------------------
+1) GRID IMPROVEMENT
+-------------------------
+
+- Grid must be 6x6.
+- Grid height must align visually with character height.
+- Grid expands downward until HP/MP bars.
+- No logic changes allowed.
+
+Tile visual upgrade:
+- Soft gradient
+- Inner glow
+- Subtle outer glow
+- Rounded corners
+- Premium 3D feel
+- Soft drop shadow
+- Slight hover/press scale animation
+- Smooth spawn animation
+
+-------------------------
+2) TILE DROP PHYSICS
+-------------------------
+
+When tiles fall:
+- Smooth translateY animation
+- Ease-out curve
+- 220–300ms duration
+- Slight bounce at end (subtle)
+- No logic change
+
+-------------------------
+3) MATCH IMPACT EFFECT
+-------------------------
+
+On match:
+- Scale up 1.1
+- Glow flash
+- Fade out
+- Micro screen shake (very subtle)
+- 150–200ms timing
+
+-------------------------
+4) 4-TILE COMBO EFFECT
+-------------------------
+
+When combo count == 4:
+- Create particle energy stream
+- Energy flows from matched tiles
+- Moves toward character
+- Smooth bezier motion
+- Tile-color based energy
+
+-------------------------
+5) 5-TILE COMBO EFFECT
+-------------------------
+
+When combo count >= 5:
+- Stronger glow
+- Larger particle stream
+- Character glow pulse
+- Slight slow-motion effect (very short 120ms)
+- Strong color-based energy burst
+
+-------------------------
+6) COLOR-BASED ENERGY SYSTEM
+-------------------------
+
+Red → Red flame energy
+Green → Nature aura
+Blue → Ice/arcane energy
+Purple → Dark magic aura
+Yellow → Golden radiant burst
+
+Energy particles:
+- Small glowing circles
+- Fade while traveling
+- Smooth easing
+- No new gameplay effect
+- Purely visual
+
+-------------------------
+7) CHARACTER REACTION
+-------------------------
+
+When energy reaches character:
+- Soft outline glow
+- 1.05 scale pulse
+- Short light burst
+- 150ms duration
+- No stat changes
+
+-------------------------
+8) HP / MP BAR POLISH
+-------------------------
+
+- Smooth animated width transition
+- Slight glow on change
+- Subtle gradient fill
+- No value logic change
+
+-------------------------
+9) PERFORMANCE SAFETY
+-------------------------
+
+- No heavy libraries
+- No new major dependencies
+- Use existing animation system
+- Keep performance smooth
+- Test after each step
+
+--------------------------------------------------
+
+FINAL RULE:
+
+Game mechanics must remain EXACTLY the same.
+Only visuals, animation layers, and polish are allowed.
+Preview must work.
+Stay in manual mode.
+Work step by step.

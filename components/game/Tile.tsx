@@ -54,16 +54,28 @@ export function Tile({ type, selected, matched, isNew, size, tileHeight, row, co
     if (isNew) {
       scale.value = withSpring(1, { damping: 12, stiffness: 180 });
       opacity.value = withTiming(1, { duration: 220 });
+      // Drop animation
+      floatY.value = -100;
+      floatY.value = withTiming(0, { 
+        duration: 300, 
+        easing: Easing.bezier(0.25, 0.1, 0.25, 1) 
+      }, () => {
+        floatY.value = withSequence(
+          withTiming(2, { duration: 50 }),
+          withTiming(0, { duration: 100 })
+        );
+      });
     }
   }, [isNew]);
 
   useEffect(() => {
     if (matched) {
       scale.value = withSequence(
-        withTiming(1.3, { duration: 80 }),
-        withTiming(0, { duration: 230 })
+        withTiming(1.2, { duration: 60 }),
+        withTiming(1.1, { duration: 40 }),
+        withTiming(0, { duration: 120 })
       );
-      opacity.value = withTiming(0, { duration: 310 });
+      opacity.value = withTiming(0, { duration: 200 });
     }
   }, [matched]);
 
@@ -89,7 +101,7 @@ export function Tile({ type, selected, matched, isNew, size, tileHeight, row, co
 
   const shadowStyle = Platform.OS === 'web'
     ? { 
-        boxShadow: `0 4px 8px rgba(0,0,0,0.5), 0 0 ${glowStrength}px ${glowColor}${selected ? 'aa' : '44'}`,
+        boxShadow: `0 4px 8px rgba(0,0,0,0.5), 0 0 ${glowStrength}px ${glowColor}${selected ? 'aa' : '44'}, inset 0 0 10px rgba(255,255,255,0.1)`,
       }
     : {
         shadowColor: glowColor,
@@ -103,7 +115,7 @@ export function Tile({ type, selected, matched, isNew, size, tileHeight, row, co
     <Pressable
       onPress={onPress}
       onPressIn={() => {
-        pressScale.value = withTiming(0.92, { duration: 100 });
+        pressScale.value = withTiming(0.95, { duration: 100 });
       }}
       onPressOut={() => {
         pressScale.value = withSpring(1);
@@ -116,7 +128,7 @@ export function Tile({ type, selected, matched, isNew, size, tileHeight, row, co
           {
             width: size - 3,
             height: finalHeight - 3,
-            borderRadius: 12,
+            borderRadius: 14,
             backgroundColor: cfg.bg,
             borderColor: selected ? '#d4af37' : cfg.border,
             borderWidth: selected ? 2.5 : 1.5,
@@ -126,7 +138,7 @@ export function Tile({ type, selected, matched, isNew, size, tileHeight, row, co
         ]}
       >
         <LinearGradient
-          colors={['rgba(255,255,255,0.12)', 'rgba(255,255,255,0)', 'rgba(0,0,0,0.15)']}
+          colors={['rgba(255,255,255,0.15)', 'rgba(255,255,255,0.05)', 'rgba(0,0,0,0.2)']}
           style={StyleSheet.absoluteFill}
         />
         <View style={styles.innerGlow} />
