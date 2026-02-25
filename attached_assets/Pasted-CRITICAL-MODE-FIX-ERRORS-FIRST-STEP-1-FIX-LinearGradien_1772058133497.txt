@@ -1,0 +1,106 @@
+CRITICAL MODE: FIX ERRORS FIRST
+
+STEP 1 — FIX LinearGradient ERROR
+
+1) Check if expo-linear-gradient is installed.
+If not installed:
+    Install: expo install expo-linear-gradient
+
+2) Add correct import where LinearGradient is used:
+
+import { LinearGradient } from 'expo-linear-gradient';
+
+3) If project is NOT Expo:
+    Install:
+    npm install react-native-linear-gradient
+    Then import:
+    import LinearGradient from 'react-native-linear-gradient';
+
+4) Ensure component is properly returned inside JSX.
+
+--------------------------------------------------
+
+STEP 2 — FIX ANY REANIMATED ERRORS
+
+If using useSharedValue:
+Make sure this import exists:
+
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  withSequence,
+  withSpring
+} from 'react-native-reanimated';
+
+If reanimated is not configured:
+Ensure babel.config.js includes:
+
+plugins: ['react-native-reanimated/plugin']
+
+--------------------------------------------------
+
+STEP 3 — FIX TYPESCRIPT ERRORS
+
+If TypeScript complains:
+
+- Ensure component has return ()
+- Ensure props are typed
+- Ensure no missing closing brackets
+- Ensure no undefined styles
+
+Do NOT refactor structure.
+Only fix syntax/import/runtime errors.
+
+--------------------------------------------------
+
+AFTER ALL ERRORS ARE FIXED:
+
+APPLY SAFE VISUAL UPGRADE
+
+IMPORTANT:
+- DO NOT introduce new libraries beyond expo-linear-gradient
+- DO NOT change match logic
+- DO NOT modify backend
+- DO NOT break working UI
+
+--------------------------------------------------
+
+SAFE VISUAL IMPROVEMENTS ONLY
+
+1) HP/MP bars:
+   - Use LinearGradient correctly
+   - Wrap gradient inside View container
+   - Animate width using withTiming
+   - No absoluteFill misuse
+
+2) Grid tiles:
+   - Add borderRadius
+   - Add shadow
+   - Add subtle scale animation on press
+   - NO structural changes
+
+3) Combo system:
+   - Only add multiplier variable
+   - Apply multiplier AFTER base damage
+   - Add simple floating text component
+   - No physics engines
+   - No heavy particle systems
+
+4) Level system:
+   - Add XP state
+   - Add XP bar below HP
+   - Add level up check
+   - Small stat scaling (5% per level)
+
+--------------------------------------------------
+
+FINAL RULES:
+
+Fix errors first.
+Ensure app compiles.
+Test render.
+Then enhance step by step.
+
+Stay in manual mode.
+Do NOT switch to Autonomous.
