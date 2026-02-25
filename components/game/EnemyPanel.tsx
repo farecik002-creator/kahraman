@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Platform } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -17,18 +17,19 @@ interface EnemyPanelProps {
 }
 
 export function EnemyPanel({ enemy, wave, enemyIndex }: EnemyPanelProps) {
-  const hpPercent = enemy.hp / enemy.maxHP;
+  const hpPercent = Math.max(0, enemy.hp / enemy.maxHP);
   const shakeX = useSharedValue(0);
   const prevHPRef = React.useRef(enemy.hp);
 
   useEffect(() => {
     if (enemy.hp < prevHPRef.current) {
       shakeX.value = withSequence(
-        withTiming(-8, { duration: 60 }),
-        withTiming(8, { duration: 60 }),
-        withTiming(-6, { duration: 55 }),
-        withTiming(6, { duration: 55 }),
-        withTiming(0, { duration: 50 })
+        withTiming(-10, { duration: 55 }),
+        withTiming(10, { duration: 55 }),
+        withTiming(-7, { duration: 50 }),
+        withTiming(7, { duration: 50 }),
+        withTiming(-4, { duration: 45 }),
+        withTiming(0, { duration: 45 })
       );
     }
     prevHPRef.current = enemy.hp;
@@ -38,47 +39,66 @@ export function EnemyPanel({ enemy, wave, enemyIndex }: EnemyPanelProps) {
     transform: [{ translateX: shakeX.value }],
   }));
 
-  const barColor =
-    hpPercent > 0.5 ? '#cc3333' : hpPercent > 0.25 ? '#cc7700' : '#aa0000';
+  const hpColor =
+    hpPercent > 0.5 ? '#cc2222' : hpPercent > 0.25 ? '#cc6600' : '#ff1100';
+
+  const barShadow = Platform.OS === 'web'
+    ? { boxShadow: `0 0 8px ${hpColor}` }
+    : {};
 
   return (
     <View style={styles.container}>
-      <View style={styles.topRow}>
-        <View style={styles.iconWrap}>
-          {enemy.iconSet === 'ion' ? (
-            <Ionicons name={enemy.iconName as any} size={28} color="#cc3333" />
-          ) : (
-            <MaterialCommunityIcons name={enemy.iconName as any} size={28} color="#cc3333" />
-          )}
-        </View>
-        <Animated.View style={[styles.nameBlock, shakeStyle]}>
-          <Text style={styles.enemyName}>{enemy.name}</Text>
-          <Text style={styles.enemyTitle}>{enemy.title} — Lv.{enemy.level}</Text>
+      <View style={styles.bgOverlay} />
+      <View style={styles.innerRow}>
+        <Animated.View style={[styles.iconSection, shakeStyle]}>
+          <View style={styles.iconRing}>
+            {enemy.iconSet === 'ion' ? (
+              <Ionicons name={enemy.iconName as any} size={32} color={hpColor} />
+            ) : (
+              <MaterialCommunityIcons name={enemy.iconName as any} size={32} color={hpColor} />
+            )}
+          </View>
+          <View style={styles.levelPill}>
+            <Text style={styles.levelText}>LV.{enemy.level}</Text>
+          </View>
         </Animated.View>
-        <View style={styles.waveBlock}>
-          <Text style={styles.waveLabel}>WAVE</Text>
-          <Text style={styles.waveNum}>{wave}</Text>
-          <Text style={styles.enemyCount}>{enemyIndex + 1}/5</Text>
+
+        <View style={styles.infoSection}>
+          <View style={styles.nameRow}>
+            <Text style={styles.enemyTitle}>{enemy.title.toUpperCase()}</Text>
+            <Text style={styles.enemyName}>{enemy.name}</Text>
+          </View>
+
+          <View style={styles.hpRow}>
+            <View style={styles.hpBarBg}>
+              <View style={[styles.hpBarFill, { width: `${hpPercent * 100}%`, backgroundColor: hpColor }, barShadow]} />
+              <View style={styles.hpBarGlass} />
+            </View>
+            <Text style={styles.hpText}>
+              {enemy.hp}
+              <Text style={styles.hpMax}>/{enemy.maxHP}</Text>
+            </Text>
+          </View>
         </View>
-      </View>
-      <View style={styles.hpRow}>
-        <Text style={styles.hpLabel}>HP</Text>
-        <View style={styles.hpBarBg}>
-          <Animated.View
-            style={[
-              styles.hpBarFill,
-              { width: `${Math.max(0, hpPercent * 100)}%`, backgroundColor: barColor },
-            ]}
-          />
-          <View style={styles.hpBarSegments}>
-            {[0.25, 0.5, 0.75].map(seg => (
-              <View key={seg} style={[styles.hpSegLine, { left: `${seg * 100}%` }]} />
+
+        <View style={styles.waveSection}>
+          <Text style={styles.waveLbl}>WAVE</Text>
+          <Text style={styles.waveNum}>{wave}</Text>
+          <View style={styles.enemyDots}>
+            {[0, 1, 2, 3, 4].map(i => (
+              <View
+                key={i}
+                style={[
+                  styles.dot,
+                  {
+                    backgroundColor:
+                      i < enemyIndex ? '#333333' : i === enemyIndex ? '#d4af37' : '#8b6914',
+                  },
+                ]}
+              />
             ))}
           </View>
         </View>
-        <Text style={styles.hpText}>
-          {enemy.hp}/{enemy.maxHP}
-        </Text>
       </View>
     </View>
   );
@@ -86,106 +106,141 @@ export function EnemyPanel({ enemy, wave, enemyIndex }: EnemyPanelProps) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#0d1322',
+    height: 80,
+    borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#8b6914',
-    borderRadius: 10,
-    padding: 10,
-    gap: 8,
-  },
-  topRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  iconWrap: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: '#1a0808',
-    borderWidth: 1,
-    borderColor: '#cc3333',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  nameBlock: {
-    flex: 1,
-  },
-  enemyName: {
-    color: '#e8d5a3',
-    fontSize: 17,
-    fontWeight: '700',
-    letterSpacing: 0.5,
-  },
-  enemyTitle: {
-    color: '#a09070',
-    fontSize: 12,
-    marginTop: 1,
-  },
-  waveBlock: {
-    alignItems: 'center',
-  },
-  waveLabel: {
-    color: '#8b6914',
-    fontSize: 9,
-    letterSpacing: 1,
-    fontWeight: '700',
-  },
-  waveNum: {
-    color: '#d4af37',
-    fontSize: 22,
-    fontWeight: '800',
-    lineHeight: 26,
-  },
-  enemyCount: {
-    color: '#a09070',
-    fontSize: 10,
-  },
-  hpRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  hpLabel: {
-    color: '#cc3333',
-    fontSize: 11,
-    fontWeight: '700',
-    width: 20,
-    letterSpacing: 0.5,
-  },
-  hpBarBg: {
-    flex: 1,
-    height: 14,
-    backgroundColor: '#200808',
-    borderRadius: 7,
-    borderWidth: 1,
-    borderColor: '#440000',
+    borderColor: '#5a1010',
     overflow: 'hidden',
+    backgroundColor: '#080810',
     position: 'relative',
   },
-  hpBarFill: {
-    height: '100%',
-    borderRadius: 7,
-  },
-  hpBarSegments: {
+  bgOverlay: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
+    backgroundColor: 'rgba(80,0,0,0.12)',
   },
-  hpSegLine: {
+  innerRow: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    gap: 10,
+  },
+  iconSection: {
+    alignItems: 'center',
+    gap: 4,
+  },
+  iconRing: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: '#160808',
+    borderWidth: 1.5,
+    borderColor: '#5a1010',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  levelPill: {
+    backgroundColor: '#2a0808',
+    borderWidth: 1,
+    borderColor: '#5a1010',
+    borderRadius: 6,
+    paddingHorizontal: 4,
+    paddingVertical: 1,
+    marginTop: -4,
+  },
+  levelText: {
+    color: '#cc4444',
+    fontSize: 8,
+    fontWeight: '900',
+    letterSpacing: 0.5,
+  },
+  infoSection: {
+    flex: 1,
+    gap: 6,
+  },
+  nameRow: {
+    gap: 1,
+  },
+  enemyTitle: {
+    color: '#664422',
+    fontSize: 8,
+    fontWeight: '700',
+    letterSpacing: 2,
+  },
+  enemyName: {
+    color: '#e8c8a0',
+    fontSize: 16,
+    fontWeight: '800',
+    letterSpacing: 0.5,
+  },
+  hpRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  hpBarBg: {
+    flex: 1,
+    height: 10,
+    backgroundColor: '#1a0505',
+    borderRadius: 5,
+    overflow: 'hidden',
+    position: 'relative',
+    borderWidth: 0.5,
+    borderColor: '#330000',
+  },
+  hpBarFill: {
+    height: '100%',
+    borderRadius: 5,
+  },
+  hpBarGlass: {
     position: 'absolute',
     top: 0,
-    bottom: 0,
-    width: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    left: 0,
+    right: 0,
+    height: '40%',
+    backgroundColor: 'rgba(255,255,255,0.07)',
+    borderTopLeftRadius: 5,
+    borderTopRightRadius: 5,
   },
   hpText: {
-    color: '#e8d5a3',
-    fontSize: 11,
-    fontWeight: '600',
-    minWidth: 60,
+    color: '#e8c8a0',
+    fontSize: 10,
+    fontWeight: '700',
+    minWidth: 50,
     textAlign: 'right',
+  },
+  hpMax: {
+    color: '#664433',
+    fontSize: 9,
+  },
+  waveSection: {
+    alignItems: 'center',
+    gap: 3,
+  },
+  waveLbl: {
+    color: '#664422',
+    fontSize: 7,
+    fontWeight: '800',
+    letterSpacing: 1.5,
+  },
+  waveNum: {
+    color: '#d4af37',
+    fontSize: 26,
+    fontWeight: '900',
+    lineHeight: 28,
+  },
+  enemyDots: {
+    flexDirection: 'row',
+    gap: 3,
+  },
+  dot: {
+    width: 5,
+    height: 5,
+    borderRadius: 2.5,
   },
 });

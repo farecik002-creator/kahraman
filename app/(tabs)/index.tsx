@@ -6,21 +6,22 @@ import {
   useWindowDimensions,
   Platform,
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useGameLogic } from '../../hooks/useGameLogic';
 import { Tile } from '../../components/game/Tile';
 import { EnemyPanel } from '../../components/game/EnemyPanel';
-import { PlayerPanel } from '../../components/game/PlayerPanel';
-import { SkillPanel } from '../../components/game/SkillPanel';
+import { PlayerStats } from '../../components/game/PlayerStats';
+import { SkillButtons } from '../../components/game/SkillButtons';
+import { CharacterPanel } from '../../components/game/CharacterPanel';
 import { GameOverScreen } from '../../components/game/GameOverScreen';
 import { FloatingText } from '../../components/game/FloatingText';
 import { MessageBanner } from '../../components/game/MessageBanner';
-import { GRID_SIZE, TILE_CONFIG } from '../../constants/gameData';
+import { ParticleSystem } from '../../components/game/ParticleSystem';
+import { GRID_SIZE } from '../../constants/gameData';
 
-const SKILL_PANEL_WIDTH = 70;
-const H_PAD = 12;
 const GRID_GAP = 2;
-const LEGEND_HEIGHT = 18;
+const H_PAD = 8;
 
 export default function GameScreen() {
   const { width, height } = useWindowDimensions();
@@ -29,8 +30,18 @@ export default function GameScreen() {
   const topInset = Platform.OS === 'web' ? 67 : insets.top;
   const bottomInset = Platform.OS === 'web' ? 34 : insets.bottom;
 
-  const availableGridWidth = width - H_PAD * 2 - SKILL_PANEL_WIDTH - 8;
-  const tileSize = Math.floor((availableGridWidth - GRID_GAP * (GRID_SIZE - 1)) / GRID_SIZE);
+  const charWidth = Math.floor((width - H_PAD * 2) * 0.38);
+  const boardColumnWidth = width - H_PAD * 2 - charWidth - 8;
+  const tileSize = Math.floor((boardColumnWidth - GRID_GAP * (GRID_SIZE - 1)) / GRID_SIZE);
+  const gridPx = tileSize * GRID_SIZE + GRID_GAP * (GRID_SIZE - 1);
+
+  const ENEMY_H = 80;
+  const MSG_H = 30;
+  const STATS_H = 68;
+  const TITLE_H = 36;
+  const SKILLS_H = 62;
+  const GAP_TOTAL = 8 * 5;
+  const charHeight = height - topInset - bottomInset - TITLE_H - ENEMY_H - MSG_H - STATS_H - GAP_TOTAL;
 
   const game = useGameLogic();
   const {
@@ -49,57 +60,48 @@ export default function GameScreen() {
     message,
     floatMsgs,
     playerAttacked,
+    lastSkillUsed,
     handleTilePress,
     useSkillHeal,
     useSkillCritStrike,
     restartGame,
   } = game;
 
-  const gridWidth = tileSize * GRID_SIZE + GRID_GAP * (GRID_SIZE - 1);
-  const gridHeight = tileSize * GRID_SIZE + GRID_GAP * (GRID_SIZE - 1);
-  const totalWidth = gridWidth + 8 + SKILL_PANEL_WIDTH;
-
   return (
-    <View
-      style={[
-        styles.root,
-        {
-          paddingTop: topInset + 6,
-          paddingBottom: bottomInset + 4,
-          paddingHorizontal: H_PAD,
-        },
-      ]}
-    >
-      <View style={[styles.content, { maxWidth: totalWidth + H_PAD * 2, alignSelf: 'center', width: '100%' }]}>
+    <View style={styles.root}>
+      <LinearGradient
+        colors={['#040710', '#060b14', '#080e1a', '#040710']}
+        locations={[0, 0.3, 0.7, 1]}
+        style={StyleSheet.absoluteFill}
+      />
+      <LinearGradient
+        colors={['#1a040400', '#00000000', '#1a040400']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}
+        style={StyleSheet.absoluteFill}
+        pointerEvents="none"
+      />
+
+      <ParticleSystem width={width} height={height} />
+
+      <View style={[styles.content, { paddingTop: topInset, paddingBottom: bottomInset }]}>
         <View style={styles.titleRow}>
+          <View style={styles.titleDecorL} />
           <Text style={styles.gameTitle}>DARK REALM</Text>
-          <Text style={styles.gameSubtitle}>Match-3 Dungeon</Text>
+          <View style={styles.titleDecorR} />
         </View>
 
-        <EnemyPanel enemy={enemy} wave={wave} enemyIndex={enemyIndex} />
+        <View style={{ paddingHorizontal: H_PAD }}>
+          <EnemyPanel enemy={enemy} wave={wave} enemyIndex={enemyIndex} />
+        </View>
 
-        <MessageBanner message={message} />
+        <View style={{ paddingHorizontal: H_PAD }}>
+          <MessageBanner message={message} />
+        </View>
 
-        <View style={styles.middleRow}>
-          <View>
-            <View style={[styles.legend, { width: gridWidth }]}>
-              {(['sword', 'heart', 'shield', 'star', 'moon', 'diamond'] as const).map(type => {
-                const cfg = TILE_CONFIG[type];
-                return (
-                  <View key={type} style={styles.legendItem}>
-                    <View style={[styles.legendDot, { backgroundColor: cfg.iconColor }]} />
-                    <Text style={[styles.legendText, { color: cfg.iconColor }]}>{cfg.label}</Text>
-                  </View>
-                );
-              })}
-            </View>
-
-            <View
-              style={[
-                styles.gridContainer,
-                { width: gridWidth, height: gridHeight },
-              ]}
-            >
+        <View style={[styles.middleRow, { paddingHorizontal: H_PAD }]}>
+          <View style={[styles.boardColumn, { width: boardColumnWidth }]}>
+            <View style={[styles.gridContainer, { width: gridPx, height: gridPx }]}>
               {board.map((row, rowIdx) =>
                 row.map((tile, colIdx) => (
                   <View
@@ -112,12 +114,12 @@ export default function GameScreen() {
                   >
                     <Tile
                       type={tile.type}
-                      selected={
-                        selectedPos?.row === rowIdx && selectedPos?.col === colIdx
-                      }
+                      selected={selectedPos?.row === rowIdx && selectedPos?.col === colIdx}
                       matched={tile.matched}
                       isNew={tile.isNew}
                       size={tileSize}
+                      row={rowIdx}
+                      col={colIdx}
                       critActive={critActive}
                       onPress={() => handleTilePress({ row: rowIdx, col: colIdx })}
                     />
@@ -132,28 +134,35 @@ export default function GameScreen() {
                   color={fm.color}
                   x={fm.x}
                   y={fm.y}
-                  containerWidth={gridWidth}
-                  containerHeight={gridHeight}
+                  containerWidth={gridPx}
+                  containerHeight={gridPx}
                 />
               ))}
             </View>
+
+            <View style={{ height: 8 }} />
+
+            <SkillButtons
+              playerMana={playerMana}
+              isProcessing={isProcessing}
+              critActive={critActive}
+              onHeal={useSkillHeal}
+              onCritStrike={useSkillCritStrike}
+            />
           </View>
 
-          <SkillPanel
-            playerMana={playerMana}
-            isProcessing={isProcessing}
-            critActive={critActive}
-            onHeal={useSkillHeal}
-            onCritStrike={useSkillCritStrike}
+          <CharacterPanel
+            combo={combo}
+            lastSkillUsed={lastSkillUsed}
+            width={charWidth}
+            height={charHeight}
           />
         </View>
 
-        <PlayerPanel
+        <PlayerStats
           playerHP={playerHP}
           playerMana={playerMana}
           defense={defense}
-          combo={combo}
-          isProcessing={isProcessing}
           critActive={critActive}
           playerAttacked={playerAttacked}
         />
@@ -173,64 +182,67 @@ export default function GameScreen() {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: '#080c12',
+    backgroundColor: '#040710',
   },
   content: {
     flex: 1,
     gap: 8,
   },
   titleRow: {
+    flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 2,
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+    gap: 10,
+    height: 36,
+  },
+  titleDecorL: {
+    flex: 1,
+    height: 1,
+    backgroundColor: '#8b6914',
+    opacity: 0.6,
+  },
+  titleDecorR: {
+    flex: 1,
+    height: 1,
+    backgroundColor: '#8b6914',
+    opacity: 0.6,
   },
   gameTitle: {
     color: '#d4af37',
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: '900',
-    letterSpacing: 5,
-    textShadowColor: '#d4af3766',
-    textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 10,
-  },
-  gameSubtitle: {
-    color: '#8b6914',
-    fontSize: 10,
-    letterSpacing: 3,
-    marginTop: -2,
+    letterSpacing: 6,
+    ...(Platform.OS === 'web'
+      ? { textShadow: '0 0 12px #d4af3788' }
+      : {
+          textShadowColor: '#d4af3766',
+          textShadowOffset: { width: 0, height: 0 },
+          textShadowRadius: 12,
+        }),
   },
   middleRow: {
+    flex: 1,
     flexDirection: 'row',
     gap: 8,
     alignItems: 'flex-start',
   },
-  legend: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 2,
-    marginBottom: 4,
-    height: LEGEND_HEIGHT,
-    alignItems: 'center',
-  },
-  legendItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 2,
-  },
-  legendDot: {
-    width: 5,
-    height: 5,
-    borderRadius: 2.5,
-  },
-  legendText: {
-    fontSize: 7,
-    fontWeight: '700',
-    letterSpacing: 0.3,
+  boardColumn: {
+    alignItems: 'flex-start',
   },
   gridContainer: {
     position: 'relative',
     borderWidth: 1.5,
-    borderColor: '#8b6914',
-    borderRadius: 8,
-    backgroundColor: '#0a0e1a',
+    borderColor: '#3a2a08',
+    borderRadius: 10,
+    backgroundColor: '#030508',
+    ...(Platform.OS === 'web'
+      ? { boxShadow: '0 0 20px #d4af3722, inset 0 0 30px #00000088' }
+      : {
+          shadowColor: '#d4af37',
+          shadowRadius: 8,
+          shadowOpacity: 0.15,
+          shadowOffset: { width: 0, height: 0 },
+        }),
   },
 });

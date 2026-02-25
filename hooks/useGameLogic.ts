@@ -62,6 +62,7 @@ export function useGameLogic() {
   const [message, setMessage] = useState('The battle begins...');
   const [floatMsgs, setFloatMsgs] = useState<FloatMsg[]>([]);
   const [playerAttacked, setPlayerAttacked] = useState(false);
+  const [lastSkillUsed, setLastSkillUsed] = useState<'heal' | 'crit' | null>(null);
 
   const addFloat = useCallback((text: string, color: string, x = 0.5, y = 0.4) => {
     const id = ++floatMsgId;
@@ -300,15 +301,19 @@ export function useGameLogic() {
     if (playerMana < 30 || isProcessing || phase !== 'playing') return;
     setPlayerMana(prev => prev - 30);
     setPlayerHP(prev => Math.min(PLAYER_MAX_HP, prev + 30));
-    addFloat('+30 HP', '#ff88bb', 0.15, 0.8);
-    setMessage('Used Heal — restored 30 HP!');
+    addFloat('+30 HP', '#44ff88', 0.15, 0.8);
+    setMessage('Heal — restored 30 HP!');
+    setLastSkillUsed('heal');
+    setTimeout(() => setLastSkillUsed(null), 900);
   }, [playerMana, isProcessing, phase, addFloat]);
 
   const useSkillCritStrike = useCallback(() => {
     if (playerMana < 40 || isProcessing || phase !== 'playing') return;
     setPlayerMana(prev => prev - 40);
     setCritActive(true);
-    setMessage('Critical Strike ready — next match is CRITICAL!');
+    setMessage('Critical Strike — next match is CRITICAL!');
+    setLastSkillUsed('crit');
+    setTimeout(() => setLastSkillUsed(null), 900);
   }, [playerMana, isProcessing, phase]);
 
   const restartGame = useCallback(() => {
@@ -327,6 +332,7 @@ export function useGameLogic() {
     setMessage('The battle begins...');
     setFloatMsgs([]);
     setPlayerAttacked(false);
+    setLastSkillUsed(null);
   }, []);
 
   return {
@@ -345,6 +351,7 @@ export function useGameLogic() {
     message,
     floatMsgs,
     playerAttacked,
+    lastSkillUsed,
     handleTilePress,
     useSkillHeal,
     useSkillCritStrike,
