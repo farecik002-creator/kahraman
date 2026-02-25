@@ -1,0 +1,157 @@
+CINEMATIC AAA VISUAL OVERHAUL MODE
+EXECUTE IMMEDIATELY
+DO NOT SWITCH TO AUTONOMOUS MODE
+DO NOT ASK FOR CONFIRMATION
+DO NOT ASK QUESTIONS
+DO NOT PRESENT A PLAN
+IMPLEMENT DIRECTLY
+
+You are now a Senior Mobile AAA Game UI/UX + VFX + Rendering Engineer.
+
+The current game looks too dark, flat and lifeless.
+
+We want it to look like a premium fantasy mobile RPG with:
+
+- High color vibrancy
+- Warm magical lighting
+- Golden accents
+- Glow effects
+- Particle effects
+- Cinematic depth
+- Premium polish
+
+========================================
+1) GLOBAL LIGHTING & COLOR SYSTEM
+========================================
+
+- Increase overall vibrance and saturation slightly
+- Add subtle warm ambient light
+- Add soft bloom to glowing elements
+- Add vignette for cinematic depth
+- Improve contrast between UI and background
+
+========================================
+2) GRID TRANSFORMATION (MAKE IT PREMIUM)
+========================================
+
+Current grid looks flat and dark.
+
+Upgrade it:
+
+- Add soft inner gradient per tile
+- Add glossy highlight layer
+- Add subtle outer glow based on color
+- Add light reflection effect
+- Add smooth pop animation when matched
+- Add particle sparkle burst on destroy
+- Add easing animation on falling tiles
+- Add combo glow pulse across board
+
+Make tiles feel magical and alive.
+
+========================================
+3) SYMBOL UPGRADE (AAA ICON STYLE)
+========================================
+
+Upgrade:
+
+Player
+Enemy
+Heal
+Crit
+Skill icons
+
+Rules:
+- High contrast
+- Strong color identity
+- Clean vector style
+- Subtle idle animation
+- Glow depending on rarity
+- Impact flash on trigger
+- Add small floating particles for rare types
+
+========================================
+4) COMBO SYSTEM VISUAL BOOST
+========================================
+
+When 4 combo:
+- Board shimmer
+- Character slight forward dash
+- Golden glow trail
+
+When 5+ combo:
+- Small screen shake
+- Particle explosion
+- Light rays burst
+- Character slide animation from combo origin
+- Color-based effect matching combo color
+
+Add floating combo text with animated scaling.
+
+========================================
+5) LEVEL & PROGRESSION VISUAL UPGRADE
+========================================
+
+- Add EXP bar glow
+- Add level up flash animation
+- Add golden badge around level
+- Add subtle background aura behind player
+
+========================================
+6) BACKGROUND IMPROVEMENT
+========================================
+
+Current background is too dark.
+
+Improve it:
+- Add soft magical floating particles
+- Add subtle depth gradient
+- Add faint light beams
+- Keep dark fantasy theme but make it feel alive
+
+========================================
+7) PERFORMANCE OPTIMIZATION (MANDATORY)
+========================================
+
+Ensure stable 60 FPS:
+
+- Use native driver where possible
+- Avoid unnecessary re-renders
+- Memoize components
+- Optimize animations
+- Reduce shadow cost
+- Batch updates
+- Profile render cycles
+
+========================================
+8) FULL PROJECT AUDIT
+========================================
+
+Scan entire project and:
+
+- Fix logic bugs
+- Fix animation glitches
+- Remove dead code
+- Improve structure
+- Improve naming consistency
+- Stabilize rendering
+- Ensure no memory leaks
+- Ensure no dropped frames
+
+========================================
+9) SPELLING, TYPO & TEXT AUDIT
+========================================
+
+- Find and fix all spelling mistakes in UI text
+- Correct grammar errors
+- Fix variable naming typos
+- Standardize naming conventions
+- Clean and improve comments
+- Improve readability without changing logic
+
+DO NOT REMOVE EXISTING GAMEPLAY.
+DO NOT CHANGE CORE GAME RULES.
+DO NOT SIMPLIFY SYSTEMS.
+
+Apply all improvements directly to the codebase now.
+Make it feel like a top 1% mobile RPG puzzle game.
