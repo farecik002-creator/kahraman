@@ -36,6 +36,12 @@ export const ENEMIES_PER_WAVE = 5;
 export const BASE_CRIT_CHANCE = 0.15;
 export const CRIT_MULTIPLIER = 2.0;
 export const COMBO_MULTIPLIER = 0.3;
+export const XP_PER_MATCH = 10;
+export const BASE_XP_REQUIRED = 100;
+
+export function getXpRequired(level: number): number {
+  return Math.floor(BASE_XP_REQUIRED * Math.pow(1.2, level - 1));
+}
 
 export const TILE_TYPES: TileType[] = ['sword', 'heart', 'shield', 'star', 'moon', 'diamond'];
 
@@ -251,6 +257,8 @@ export function calculateEffects(
   }
 
   const comboMult = 1 + combo * COMBO_MULTIPLIER;
+  const matchSizeMult = matchedIds.size >= 5 ? 1.5 : matchedIds.size >= 4 ? 1.25 : 1.0;
+  const totalMult = comboMult * matchSizeMult;
   const results: Effects[] = [];
 
   for (const [type, count] of Object.entries(byType) as [TileType, number][]) {
@@ -268,7 +276,7 @@ export function calculateEffects(
 
     switch (type) {
       case 'sword':
-        damage = Math.floor(15 * count * comboMult * critMult);
+        damage = Math.floor(15 * count * totalMult * critMult);
         break;
       case 'heart':
         heal = Math.floor(12 * count);
@@ -281,11 +289,11 @@ export function calculateEffects(
         mana = Math.floor(12 * count);
         break;
       case 'moon':
-        damage = Math.floor(8 * count * comboMult * critMult);
+        damage = Math.floor(8 * count * totalMult * critMult);
         mana = Math.floor(6 * count);
         break;
       case 'diamond':
-        damage = Math.floor(20 * count * comboMult * CRIT_MULTIPLIER);
+        damage = Math.floor(20 * count * totalMult * CRIT_MULTIPLIER);
         break;
     }
 

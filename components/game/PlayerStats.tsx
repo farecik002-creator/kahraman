@@ -13,21 +13,37 @@ interface PlayerStatsProps {
   playerAttacked: boolean;
 }
 
-function Bar({ value, max, fillColor, bgColor, glowColor }: {
+function Bar({ value, max, fillColor, bgColor, glowColor, showShine }: {
   value: number;
   max: number;
   fillColor: string;
   bgColor: string;
   glowColor: string;
+  showShine?: boolean;
 }) {
   const animatedWidth = useSharedValue(value / max);
+  const shineX = useSharedValue(-100);
 
   useEffect(() => {
     animatedWidth.value = withSpring(value / max, { damping: 15, stiffness: 100 });
   }, [value, max]);
 
+  useEffect(() => {
+    if (showShine) {
+      shineX.value = withRepeat(
+        withTiming(100, { duration: 2000, easing: Easing.linear }),
+        -1,
+        false
+      );
+    }
+  }, [showShine]);
+
   const fillStyle = useAnimatedStyle(() => ({
     width: `${animatedWidth.value * 100}%`,
+  }));
+
+  const shineStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: shineX.value * 2 }],
   }));
 
   const barGlow = Platform.OS === 'web'
@@ -37,11 +53,21 @@ function Bar({ value, max, fillColor, bgColor, glowColor }: {
     <View style={[styles.barBg, { backgroundColor: bgColor }]}>
       <Animated.View style={[styles.barFill, { backgroundColor: fillColor }, fillStyle, barGlow]}>
         <LinearGradient
-          colors={['rgba(255,255,255,0.25)', 'rgba(255,255,255,0)']}
+          colors={['rgba(255,255,255,0.3)', 'rgba(255,255,255,0)', 'rgba(0,0,0,0.2)']}
           start={{ x: 0, y: 0 }}
           end={{ x: 0, y: 1 }}
           style={StyleSheet.absoluteFill}
         />
+        {showShine && (
+          <Animated.View style={[StyleSheet.absoluteFill, shineStyle]}>
+            <LinearGradient
+              colors={['transparent', 'rgba(255,255,255,0.2)', 'transparent']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={StyleSheet.absoluteFill}
+            />
+          </Animated.View>
+        )}
       </Animated.View>
       <View style={styles.barSegments}>
         {[0.25, 0.5, 0.75].map(s => (
@@ -64,7 +90,7 @@ export function PlayerStats({ playerHP, playerMana, defense, critActive, playerA
           <Text style={[styles.valText, { color: hpColor }]}>{playerHP}</Text>
         </View>
         <View style={styles.barWrap}>
-          <Bar value={playerHP} max={PLAYER_MAX_HP} fillColor={hpColor} bgColor="#1a0808" glowColor={hpColor} />
+          <Bar value={playerHP} max={PLAYER_MAX_HP} fillColor={hpColor} bgColor="#1a0808" glowColor={hpColor} showShine={true} />
         </View>
         <Text style={styles.maxText}>/{PLAYER_MAX_HP}</Text>
         {defense > 0 && (
@@ -81,7 +107,7 @@ export function PlayerStats({ playerHP, playerMana, defense, critActive, playerA
           <Text style={[styles.valText, { color: '#4488ff' }]}>{playerMana}</Text>
         </View>
         <View style={styles.barWrap}>
-          <Bar value={playerMana} max={PLAYER_MAX_MANA} fillColor="#2255cc" bgColor="#080818" glowColor="#4488ff" />
+          <Bar value={playerMana} max={PLAYER_MAX_MANA} fillColor="#2255cc" bgColor="#080818" glowColor="#4488ff" showShine={true} />
         </View>
         <Text style={styles.maxText}>/{PLAYER_MAX_MANA}</Text>
         {critActive && (

@@ -56,6 +56,8 @@ export function useGameLogic() {
   const [enemyIndex, setEnemyIndex] = useState(0);
   const [enemy, setEnemy] = useState<EnemyState>(() => buildEnemy(0, 1));
   const [combo, setCombo] = useState(0);
+  const [level, setLevel] = useState(1);
+  const [xp, setXp] = useState(0);
   const [phase, setPhase] = useState<GamePhase>('playing');
   const [selectedPos, setSelectedPos] = useState<Position | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -70,6 +72,10 @@ export function useGameLogic() {
     setTimeout(() => {
       setFloatMsgs(prev => prev.filter(m => m.id !== id));
     }, 1200);
+  }, []);
+
+  const triggerShake = useCallback(() => {
+    // This will be handled by components observing state changes
   }, []);
 
   const advanceEnemy = useCallback(
@@ -169,7 +175,22 @@ export function useGameLogic() {
       const newPMana = Math.min(PLAYER_MAX_MANA, pMana + totalMana);
       const newDef = def + totalShield;
       const newCombo = currentCombo + 1;
+      const matchXp = matches.size * XP_PER_MATCH;
+      const newXp = xp + matchXp;
 
+      let nextLevel = level;
+      let currentTotalXp = newXp;
+      let xpReq = getXpRequired(nextLevel);
+
+      while (currentTotalXp >= xpReq) {
+        currentTotalXp -= xpReq;
+        nextLevel++;
+        xpReq = getXpRequired(nextLevel);
+        addFloat('LEVEL UP!', '#d4af37', 0.5, 0.4);
+      }
+
+      setXp(currentTotalXp);
+      setLevel(nextLevel);
       setEnemy(prev => ({ ...prev, hp: newEnemyHP }));
       setPlayerHP(newPHP);
       setPlayerMana(newPMana);
@@ -178,8 +199,11 @@ export function useGameLogic() {
 
       if (totalDamage > 0) {
         const dmgText = anyCrit ? `CRIT! -${totalDamage}` : `-${totalDamage}`;
-        const dmgColor = anyCrit ? '#00ffcc' : '#ffcc00';
+        const dmgColor = anyCrit ? '#d4af37' : '#ffcc00';
         addFloat(dmgText, dmgColor, 0.5, 0.2);
+      }
+      if (newCombo > 1) {
+        addFloat(`Combo x${newCombo}`, '#fff', 0.5, 0.35);
       }
       if (totalHeal > 0) addFloat(`+${totalHeal} HP`, '#ff88bb', 0.15, 0.8);
       if (totalShield > 0) addFloat(`+${totalShield} DEF`, '#7799ff', 0.85, 0.8);

@@ -1,0 +1,148 @@
+CRITICAL RULES:
+
+DO NOT switch to Autonomous Mode.
+DO NOT refactor project structure.
+DO NOT modify backend.
+DO NOT change existing core match logic.
+DO NOT remove current systems.
+ONLY enhance visuals, feedback systems, combo logic layer, and level progression.
+
+Game must remain fully playable.
+
+--------------------------------------------------
+PHASE 1 — UI PROFESSIONAL POLISH
+--------------------------------------------------
+
+1) TOP ENEMY BAR IMPROVEMENT
+
+Enhance enemy card:
+- Add subtle dark gradient background
+- Add inner glow border (dark red / gold mix)
+- Smooth animated HP bar decrease (300ms ease-out)
+- Add damage flash effect when enemy takes hit
+- Add small shake on heavy combo
+
+Wave indicator:
+- Animate dots filling smoothly
+- Add subtle glow on active wave
+
+--------------------------------------------------
+2) PLAYER HP / MP BAR REDESIGN
+--------------------------------------------------
+
+Make bars more premium:
+
+HP:
+- Deep red gradient
+- Subtle animated shine passing across bar
+- Smooth width transition animation
+- Glow pulse when HP is low
+
+MP:
+- Blue / cyan gradient
+- Soft energy pulse animation
+- Smooth regeneration animation
+
+Add slight 3D shadow container.
+
+DO NOT change stat logic.
+
+--------------------------------------------------
+PHASE 2 — GRID VISUAL UPGRADE
+--------------------------------------------------
+
+Make tiles look AAA mobile quality.
+
+For each tile:
+- Rounded corners (more premium)
+- Stronger gradient
+- Inner shadow
+- Soft outer glow
+- Slight glass effect overlay
+- Press scale animation (0.96)
+- Spawn animation (fade + scale 0.9 → 1)
+
+Add subtle board background glow.
+
+DO NOT change match detection logic.
+
+--------------------------------------------------
+PHASE 3 — COMBO SYSTEM UPGRADE
+--------------------------------------------------
+
+Add visual combo counter:
+
+- When combo chain occurs:
+  Show floating text: "Combo x2", "Combo x3", etc.
+  Scale animation
+  Fade upward
+
+Add combo multiplier logic layer:
+- 3 match = base
+- 4 match = 1.25x
+- 5 match = 1.5x
+- Chain combo increases multiplier gradually
+
+DO NOT break existing damage formula.
+Apply multiplier AFTER base calculation.
+
+Add energy stream effect:
+- Tiles emit colored particles
+- Travel toward character
+- Then attack enemy
+
+--------------------------------------------------
+PHASE 4 — LEVEL SYSTEM IMPROVEMENT
+--------------------------------------------------
+
+Current level exists. Improve progression:
+
+Add:
+- XP bar under HP/MP
+- XP gain per match
+- Level up animation:
+    - Glow flash
+    - "LEVEL UP" floating gold text
+    - Small character pulse animation
+
+Level scaling:
+- Each level slightly increases base damage
+- Each level slightly increases max HP
+
+Keep scaling balanced.
+No extreme stat inflation.
+
+--------------------------------------------------
+PHASE 5 — COMBAT FEEDBACK IMPROVEMENT
+--------------------------------------------------
+
+On attack:
+- Damage numbers pop on enemy
+- Critical hits larger + golden color
+- Heavy combo slight screen shake
+- Enemy hit flash
+
+On heal:
+- Green floating number
+- Soft upward animation
+
+--------------------------------------------------
+PHASE 6 — PERFORMANCE SAFETY
+--------------------------------------------------
+
+- No heavy libraries
+- Use existing animation system
+- Keep performance smooth
+- Test on Expo Go
+- No breaking changes
+
+--------------------------------------------------
+
+FINAL RULE:
+
+Game mechanics must remain stable.
+No refactor.
+No structure changes.
+Only upgrade visuals, feedback, combo layer, and level progression.
+Work step by step.
+Stay in manual mode.

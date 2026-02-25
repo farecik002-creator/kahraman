@@ -18,11 +18,15 @@ interface EnemyPanelProps {
 
 export function EnemyPanel({ enemy, wave, enemyIndex }: EnemyPanelProps) {
   const hpPercent = Math.max(0, enemy.hp / enemy.maxHP);
+  const animatedHP = useSharedValue(hpPercent);
   const shakeX = useSharedValue(0);
+  const flashOpacity = useSharedValue(0);
   const prevHPRef = React.useRef(enemy.hp);
 
   useEffect(() => {
+    animatedHP.value = withTiming(hpPercent, { duration: 300, easing: Easing.out(Easing.ease) });
     if (enemy.hp < prevHPRef.current) {
+      flashOpacity.value = withSequence(withTiming(1, { duration: 50 }), withTiming(0, { duration: 250 }));
       shakeX.value = withSequence(
         withTiming(-10, { duration: 55 }),
         withTiming(10, { duration: 55 }),
@@ -33,10 +37,18 @@ export function EnemyPanel({ enemy, wave, enemyIndex }: EnemyPanelProps) {
       );
     }
     prevHPRef.current = enemy.hp;
-  }, [enemy.hp]);
+  }, [enemy.hp, hpPercent]);
 
   const shakeStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: shakeX.value }],
+  }));
+
+  const hpBarStyle = useAnimatedStyle(() => ({
+    width: `${animatedHP.value * 100}%`,
+  }));
+
+  const flashStyle = useAnimatedStyle(() => ({
+    opacity: flashOpacity.value,
   }));
 
   const hpColor =
@@ -71,7 +83,12 @@ export function EnemyPanel({ enemy, wave, enemyIndex }: EnemyPanelProps) {
 
           <View style={styles.hpRow}>
             <View style={styles.hpBarBg}>
-              <View style={[styles.hpBarFill, { width: `${hpPercent * 100}%`, backgroundColor: hpColor }, barShadow]} />
+              <LinearGradient
+                colors={['#400', '#100']}
+                style={StyleSheet.absoluteFill}
+              />
+              <Animated.View style={[styles.hpBarFill, { backgroundColor: hpColor }, hpBarStyle, barShadow]} />
+              <Animated.View style={[StyleSheet.absoluteFill, { backgroundColor: '#fff' }, flashStyle]} />
               <View style={styles.hpBarGlass} />
             </View>
             <Text style={styles.hpText}>
@@ -221,6 +238,11 @@ const styles = StyleSheet.create({
   waveSection: {
     alignItems: 'center',
     gap: 3,
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    padding: 6,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(212, 175, 55, 0.2)',
   },
   waveLbl: {
     color: '#664422',

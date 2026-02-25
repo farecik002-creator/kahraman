@@ -129,17 +129,17 @@ export function Tile({ type, selected, matched, isNew, size, tileHeight, row, co
           {
             width: size - 3,
             height: finalHeight - 3,
-            borderRadius: 14,
+            borderRadius: 12,
             backgroundColor: cfg.bg,
             borderColor: selected ? '#d4af37' : cfg.border,
-            borderWidth: selected ? 2.5 : 1.5,
+            borderWidth: selected ? 3 : 1.5,
           },
           shadowStyle,
           animStyle,
         ]}
       >
         <LinearGradient
-          colors={['rgba(255,255,255,0.15)', 'rgba(255,255,255,0.05)', 'rgba(0,0,0,0.2)']}
+          colors={['rgba(255,255,255,0.2)', 'rgba(255,255,255,0.05)', 'rgba(0,0,0,0.3)']}
           style={StyleSheet.absoluteFill}
         />
         <View style={styles.innerGlow} />
@@ -148,7 +148,7 @@ export function Tile({ type, selected, matched, isNew, size, tileHeight, row, co
         ) : (
           <MaterialCommunityIcons name={cfg.iconName as any} size={iconSize} color={cfg.iconColor} />
         )}
-        <View style={styles.topBevel} />
+        <View style={styles.glassEffect} />
       </Animated.View>
     </Pressable>
   );
@@ -165,20 +165,22 @@ const styles = StyleSheet.create({
   },
   innerGlow: {
     position: 'absolute',
-    top: 2,
-    left: 2,
-    right: 2,
-    bottom: 2,
-    borderRadius: 10,
+    top: 1,
+    left: 1,
+    right: 1,
+    bottom: 1,
+    borderRadius: 11,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.05)',
+    borderColor: 'rgba(255,255,255,0.1)',
   },
-  topBevel: {
+  glassEffect: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
-    height: 2,
-    backgroundColor: 'rgba(255,255,255,0.15)',
+    height: '45%',
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    borderTopLeftRadius: 11,
+    borderTopRightRadius: 11,
   },
 });
