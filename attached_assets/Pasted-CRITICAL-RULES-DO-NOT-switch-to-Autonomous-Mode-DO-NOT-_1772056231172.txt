@@ -1,0 +1,96 @@
+CRITICAL RULES:
+
+DO NOT switch to Autonomous Mode.
+DO NOT refactor project structure.
+DO NOT change game mechanics.
+DO NOT modify combo logic.
+DO NOT alter state management.
+DO NOT rename folders.
+ONLY fix runtime, build, dependency, and rendering errors.
+
+--------------------------------------------------
+PHASE 1 — FULL ERROR SCAN
+--------------------------------------------------
+
+Scan entire project for:
+
+- Missing imports
+- Invalid component references
+- Incorrect React Native usage
+- Web vs Native incompatibilities
+- Expo dependency mismatches
+- Reanimated configuration issues
+- Metro / Babel misconfiguration
+- Invalid JSX components
+- Missing package installations
+
+Fix all runtime and render errors.
+
+--------------------------------------------------
+PHASE 2 — LINEARGRADIENT FIX
+--------------------------------------------------
+
+Error:
+"Property 'LinearGradient' doesn't exist"
+
+Fix properly:
+
+1) Ensure expo-linear-gradient is installed.
+2) Ensure correct import:
+   import { LinearGradient } from 'expo-linear-gradient';
+3) Ensure component is not accessed as View.LinearGradient
+4) Ensure no invalid destructuring
+5) Ensure compatibility for Expo Go
+6) Ensure dependency version matches Expo SDK version
+
+If package missing → install it safely.
+
+--------------------------------------------------
+PHASE 3 — REANIMATED SAFETY CHECK
+--------------------------------------------------
+
+If using react-native-reanimated:
+
+- Ensure babel.config.js includes:
+  'react-native-reanimated/plugin'
+- Ensure plugin is last in plugins array
+- Ensure Reanimated is compatible with current Expo SDK
+
+Fix safely if misconfigured.
+
+--------------------------------------------------
+PHASE 4 — DEPENDENCY ALIGNMENT
+--------------------------------------------------
+
+Check Expo SDK version.
+Align these packages to correct compatible versions:
+
+- expo
+- expo-router
+- expo-linear-gradient
+- react-native-reanimated
+- react-native-gesture-handler
+
+Do NOT upgrade randomly.
+Match SDK-compatible versions only.
+
+--------------------------------------------------
+PHASE 5 — WEB + EXPO GO COMPATIBILITY
+--------------------------------------------------
+
+Ensure:
+
+- No web-only APIs used in native runtime
+- No native-only APIs breaking web
+- No invalid platform-specific imports
+- Safe cross-platform rendering
+
+--------------------------------------------------
+FINAL RULE:
+
+Game must behave EXACTLY the same.
+No mechanic changes allowed.
+Only fix errors and compatibility issues.
+Test in Expo Go and Web preview.
+Work step by step.
+Stay in manual mode.
