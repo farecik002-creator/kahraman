@@ -37,11 +37,13 @@ export default function GameScreen() {
 
   const ENEMY_H = 80;
   const MSG_H = 30;
-  const STATS_H = 68;
+  const STATS_H = 76; // Slightly increased for padding
   const TITLE_H = 36;
-  const SKILLS_H = 62;
-  const GAP_TOTAL = 8 * 5;
+  const SKILLS_H = 68;
+  const GAP_TOTAL = 12 * 5; // Increased gap for vertical expansion
   const charHeight = height - topInset - bottomInset - TITLE_H - ENEMY_H - MSG_H - STATS_H - GAP_TOTAL;
+  // Grid height will now be controlled by charHeight to match CharacterPanel
+  const gridHeight = charHeight; 
 
   const game = useGameLogic();
   const {
@@ -101,31 +103,34 @@ export default function GameScreen() {
 
         <View style={[styles.middleRow, { paddingHorizontal: H_PAD }]}>
           <View style={[styles.boardColumn, { width: boardColumnWidth }]}>
-            <View style={[styles.gridContainer, { width: gridPx, height: gridPx }]}>
-              {board.map((row, rowIdx) =>
-                row.map((tile, colIdx) => (
-                  <View
-                    key={tile.id}
-                    style={{
-                      position: 'absolute',
-                      left: colIdx * (tileSize + GRID_GAP),
-                      top: rowIdx * (tileSize + GRID_GAP),
-                    }}
-                  >
-                    <Tile
-                      type={tile.type}
-                      selected={selectedPos?.row === rowIdx && selectedPos?.col === colIdx}
-                      matched={tile.matched}
-                      isNew={tile.isNew}
-                      size={tileSize}
-                      row={rowIdx}
-                      col={colIdx}
-                      critActive={critActive}
-                      onPress={() => handleTilePress({ row: rowIdx, col: colIdx })}
-                    />
-                  </View>
-                ))
-              )}
+            <View style={[styles.gridContainer, { width: gridPx, height: gridHeight }]}>
+              <View style={[styles.gridInner, { height: gridHeight }]}>
+                {board.map((row, rowIdx) =>
+                  row.map((tile, colIdx) => (
+                    <View
+                      key={tile.id}
+                      style={{
+                        position: 'absolute',
+                        left: colIdx * (tileSize + GRID_GAP),
+                        top: rowIdx * ((gridHeight - (GRID_SIZE - 1) * GRID_GAP) / GRID_SIZE + GRID_GAP),
+                      }}
+                    >
+                      <Tile
+                        type={tile.type}
+                        selected={selectedPos?.row === rowIdx && selectedPos?.col === colIdx}
+                        matched={tile.matched}
+                        isNew={tile.isNew}
+                        size={tileSize}
+                        tileHeight={(gridHeight - (GRID_SIZE - 1) * GRID_GAP) / GRID_SIZE}
+                        row={rowIdx}
+                        col={colIdx}
+                        critActive={critActive}
+                        onPress={() => handleTilePress({ row: rowIdx, col: colIdx })}
+                      />
+                    </View>
+                  ))
+                )}
+              </View>
 
               {floatMsgs.map(fm => (
                 <FloatingText
@@ -135,12 +140,12 @@ export default function GameScreen() {
                   x={fm.x}
                   y={fm.y}
                   containerWidth={gridPx}
-                  containerHeight={gridPx}
+                  containerHeight={gridHeight}
                 />
               ))}
             </View>
 
-            <View style={{ height: 8 }} />
+            <View style={{ height: 12 }} />
 
             <SkillButtons
               playerMana={playerMana}
@@ -229,20 +234,25 @@ const styles = StyleSheet.create({
   },
   boardColumn: {
     alignItems: 'flex-start',
+    justifyContent: 'space-between',
   },
   gridContainer: {
     position: 'relative',
     borderWidth: 1.5,
     borderColor: '#3a2a08',
-    borderRadius: 10,
+    borderRadius: 12,
     backgroundColor: '#030508',
+    overflow: 'hidden',
     ...(Platform.OS === 'web'
-      ? { boxShadow: '0 0 20px #d4af3722, inset 0 0 30px #00000088' }
+      ? { boxShadow: '0 0 25px #d4af3715, inset 0 0 40px #000000aa' }
       : {
           shadowColor: '#d4af37',
-          shadowRadius: 8,
-          shadowOpacity: 0.15,
+          shadowRadius: 10,
+          shadowOpacity: 0.2,
           shadowOffset: { width: 0, height: 0 },
         }),
+  },
+  gridInner: {
+    width: '100%',
   },
 });

@@ -19,15 +19,18 @@ interface TileProps {
   matched: boolean;
   isNew: boolean;
   size: number;
+  tileHeight?: number;
   row: number;
   col: number;
   onPress: () => void;
   critActive?: boolean;
 }
 
-export function Tile({ type, selected, matched, isNew, size, row, col, onPress, critActive }: TileProps) {
+export function Tile({ type, selected, matched, isNew, size, tileHeight, row, col, onPress, critActive }: TileProps) {
+  const finalHeight = tileHeight || size;
   const scale = useSharedValue(isNew ? 0.3 : 1);
   const opacity = useSharedValue(isNew ? 0 : 1);
+  const pressScale = useSharedValue(1);
   const floatY = useSharedValue(0);
 
   const floatDelay = ((row * GRID_SIZE + col) % 4) * 280;
@@ -72,40 +75,48 @@ export function Tile({ type, selected, matched, isNew, size, row, col, onPress, 
 
   const animStyle = useAnimatedStyle(() => ({
     transform: [
-      { scale: scale.value },
+      { scale: scale.value * pressScale.value },
       { translateY: floatY.value },
     ],
     opacity: opacity.value,
   }));
 
   const cfg = TILE_CONFIG[type];
-  const iconSize = Math.floor(size * 0.46);
+  const iconSize = Math.floor(size * 0.48);
 
-  const glowStrength = selected ? 14 : 5;
+  const glowStrength = selected ? 18 : 6;
   const glowColor = selected ? '#d4af37' : cfg.glow;
 
   const shadowStyle = Platform.OS === 'web'
-    ? { boxShadow: `0 0 ${glowStrength}px ${glowColor}` }
+    ? { 
+        boxShadow: `0 4px 8px rgba(0,0,0,0.5), 0 0 ${glowStrength}px ${glowColor}${selected ? 'aa' : '44'}`,
+      }
     : {
         shadowColor: glowColor,
         shadowRadius: glowStrength,
-        shadowOpacity: selected ? 1 : 0.6,
-        shadowOffset: { width: 0, height: 0 },
-        elevation: selected ? 10 : 4,
+        shadowOpacity: selected ? 0.8 : 0.4,
+        shadowOffset: { width: 0, height: 2 },
+        elevation: selected ? 12 : 4,
       };
 
   return (
     <Pressable
       onPress={onPress}
-      style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }}
+      onPressIn={() => {
+        pressScale.value = withTiming(0.92, { duration: 100 });
+      }}
+      onPressOut={() => {
+        pressScale.value = withSpring(1);
+      }}
+      style={{ width: size, height: finalHeight, alignItems: 'center', justifyContent: 'center' }}
     >
       <Animated.View
         style={[
           styles.tile,
           {
-            width: size - 2,
-            height: size - 2,
-            borderRadius: 9,
+            width: size - 3,
+            height: finalHeight - 3,
+            borderRadius: 12,
             backgroundColor: cfg.bg,
             borderColor: selected ? '#d4af37' : cfg.border,
             borderWidth: selected ? 2.5 : 1.5,
@@ -114,12 +125,17 @@ export function Tile({ type, selected, matched, isNew, size, row, col, onPress, 
           animStyle,
         ]}
       >
-        <Animated.View style={styles.shineTop} />
+        <LinearGradient
+          colors={['rgba(255,255,255,0.12)', 'rgba(255,255,255,0)', 'rgba(0,0,0,0.15)']}
+          style={StyleSheet.absoluteFill}
+        />
+        <View style={styles.innerGlow} />
         {cfg.iconSet === 'ion' ? (
           <Ionicons name={cfg.iconName as any} size={iconSize} color={cfg.iconColor} />
         ) : (
           <MaterialCommunityIcons name={cfg.iconName as any} size={iconSize} color={cfg.iconColor} />
         )}
+        <View style={styles.topBevel} />
       </Animated.View>
     </Pressable>
   );
@@ -131,15 +147,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     overflow: 'hidden',
     position: 'relative',
+    borderBottomWidth: 2,
+    borderBottomColor: 'rgba(0,0,0,0.3)',
   },
-  shineTop: {
+  innerGlow: {
+    position: 'absolute',
+    top: 2,
+    left: 2,
+    right: 2,
+    bottom: 2,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.05)',
+  },
+  topBevel: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
-    height: '35%',
-    backgroundColor: 'rgba(255,255,255,0.08)',
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
+    height: 2,
+    backgroundColor: 'rgba(255,255,255,0.15)',
   },
 });

@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, Platform } from 'react-native';
-import Animated, { useAnimatedStyle } from 'react-native-reanimated';
+import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { PLAYER_MAX_HP, PLAYER_MAX_MANA } from '../../constants/gameData';
 
@@ -19,13 +20,29 @@ function Bar({ value, max, fillColor, bgColor, glowColor }: {
   bgColor: string;
   glowColor: string;
 }) {
-  const pct = Math.max(0, Math.min(1, value / max));
+  const animatedWidth = useSharedValue(value / max);
+
+  useEffect(() => {
+    animatedWidth.value = withSpring(value / max, { damping: 15, stiffness: 100 });
+  }, [value, max]);
+
+  const fillStyle = useAnimatedStyle(() => ({
+    width: `${animatedWidth.value * 100}%`,
+  }));
+
   const barGlow = Platform.OS === 'web'
-    ? { boxShadow: `0 0 8px ${glowColor}` }
+    ? { boxShadow: `0 0 12px ${glowColor}88` }
     : {};
   return (
     <View style={[styles.barBg, { backgroundColor: bgColor }]}>
-      <View style={[styles.barFill, { width: `${pct * 100}%`, backgroundColor: fillColor }, barGlow]} />
+      <Animated.View style={[styles.barFill, { backgroundColor: fillColor }, fillStyle, barGlow]}>
+        <LinearGradient
+          colors={['rgba(255,255,255,0.25)', 'rgba(255,255,255,0)']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 0, y: 1 }}
+          style={StyleSheet.absoluteFill}
+        />
+      </Animated.View>
       <View style={styles.barSegments}>
         {[0.25, 0.5, 0.75].map(s => (
           <View key={s} style={[styles.barSeg, { left: `${s * 100}%` }]} />

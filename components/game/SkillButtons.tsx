@@ -6,7 +6,9 @@ import Animated, {
   withSpring,
   withSequence,
   withTiming,
+  withRepeat,
 } from 'react-native-reanimated';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 interface SkillButtonProps {
@@ -40,7 +42,11 @@ function SkillButton({
   const glow = useSharedValue(active ? 1 : 0);
 
   useEffect(() => {
-    glow.value = withTiming(active ? 1 : 0, { duration: 300 });
+    glow.value = withRepeat(
+      withTiming(active ? 1 : 0.4, { duration: 1000 }),
+      -1,
+      true
+    );
   }, [active]);
 
   const handlePress = () => {
@@ -51,10 +57,18 @@ function SkillButton({
 
   const btnStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
+    shadowOpacity: withTiming(active ? 0.8 : 0.2, { duration: 300 }),
+  }));
+
+  const glowStyle = useAnimatedStyle(() => ({
+    opacity: glow.value,
+    shadowColor: glowColor,
+    shadowRadius: active ? 15 : 5,
+    elevation: active ? 10 : 2,
   }));
 
   const glowShadow = Platform.OS === 'web'
-    ? (active ? { boxShadow: `0 0 18px ${glowColor}` } : {})
+    ? { boxShadow: active ? `0 0 20px ${glowColor}` : `0 0 5px ${glowColor}44` }
     : {};
 
   return (
@@ -69,12 +83,18 @@ function SkillButton({
               ? '#252535'
               : '#5a4a1a',
             opacity: isDisabled ? 0.5 : 1,
+            backgroundColor: '#0d1020',
           },
           glowShadow,
           btnStyle,
+          glowStyle,
         ]}
       >
-        <View style={[styles.btnInner, { backgroundColor: isDisabled ? '#0a0a18' : '#0d1020' }]}>
+        <LinearGradient
+          colors={[accentColor + '15', 'transparent']}
+          style={StyleSheet.absoluteFill}
+        />
+        <View style={styles.btnInner}>
           <View style={[styles.iconCircle, { borderColor: isDisabled ? '#252535' : accentColor }]}>
             {iconSet === 'ion' ? (
               <Ionicons
@@ -102,12 +122,12 @@ function SkillButton({
             </View>
           </View>
           {active && (
-            <View style={[styles.readyPill, { backgroundColor: accentColor + '22', borderColor: accentColor }]}>
+            <View style={[styles.readyPill, { backgroundColor: accentColor + '33', borderColor: accentColor }]}>
               <Text style={[styles.readyText, { color: accentColor }]}>READY</Text>
             </View>
           )}
         </View>
-        <View style={[styles.btnShine, { backgroundColor: accentColor }]} />
+        <View style={[styles.btnShine, { backgroundColor: accentColor, opacity: active ? 0.6 : 0.2 }]} />
       </Animated.View>
     </Pressable>
   );
