@@ -54,11 +54,15 @@ export function EnemyPanel({ enemy, wave, enemyIndex }: EnemyPanelProps) {
   }));
 
   const hpColor =
-    hpPercent > 0.5 ? '#cc2222' : hpPercent > 0.25 ? '#cc6600' : '#ff1100';
+    hpPercent > 0.5 ? '#ff3333' : hpPercent > 0.25 ? '#ffaa00' : '#ff0000';
 
   const barShadow = Platform.OS === 'web'
-    ? { boxShadow: `0 0 8px ${hpColor}` }
-    : {};
+    ? { boxShadow: `0 0 12px ${hpColor}aa` }
+    : {
+        shadowColor: hpColor,
+        shadowRadius: 10,
+        shadowOpacity: 0.7,
+      };
 
   return (
     <View style={styles.container}>

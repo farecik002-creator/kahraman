@@ -139,16 +139,18 @@ export function Tile({ type, selected, matched, isNew, size, tileHeight, row, co
         ]}
       >
         <LinearGradient
-          colors={['rgba(255,255,255,0.2)', 'rgba(255,255,255,0.05)', 'rgba(0,0,0,0.3)']}
+          colors={['rgba(255,255,255,0.4)', 'rgba(255,255,255,0.1)', 'rgba(0,0,0,0.5)']}
           style={StyleSheet.absoluteFill}
         />
         <View style={styles.innerGlow} />
+        <View style={styles.glossyTop} />
         {cfg.iconSet === 'ion' ? (
-          <Ionicons name={cfg.iconName as any} size={iconSize} color={cfg.iconColor} />
+          <Ionicons name={cfg.iconName as any} size={iconSize} color={cfg.iconColor} style={styles.iconShadow} />
         ) : (
-          <MaterialCommunityIcons name={cfg.iconName as any} size={iconSize} color={cfg.iconColor} />
+          <MaterialCommunityIcons name={cfg.iconName as any} size={iconSize} color={cfg.iconColor} style={styles.iconShadow} />
         )}
         <View style={styles.glassEffect} />
+        <View style={styles.rimLight} />
       </Animated.View>
     </Pressable>
   );
@@ -160,27 +162,51 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     overflow: 'hidden',
     position: 'relative',
-    borderBottomWidth: 2,
-    borderBottomColor: 'rgba(0,0,0,0.3)',
+    borderBottomWidth: 3,
+    borderBottomColor: 'rgba(0,0,0,0.4)',
   },
   innerGlow: {
     position: 'absolute',
-    top: 1,
-    left: 1,
-    right: 1,
-    bottom: 1,
-    borderRadius: 11,
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
+    top: 2,
+    left: 2,
+    right: 2,
+    bottom: 2,
+    borderRadius: 10,
+    borderWidth: 1.5,
+    borderColor: 'rgba(255,255,255,0.15)',
   },
-  glassEffect: {
+  glossyTop: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
-    height: '45%',
-    backgroundColor: 'rgba(255,255,255,0.1)',
+    height: '50%',
+    backgroundColor: 'rgba(255,255,255,0.08)',
     borderTopLeftRadius: 11,
     borderTopRightRadius: 11,
+  },
+  rimLight: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    borderRadius: 11,
+    borderWidth: 0.5,
+    borderColor: 'rgba(255,255,255,0.3)',
+  },
+  iconShadow: {
+    textShadowColor: 'rgba(0,0,0,0.5)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 4,
+  },
+  glassEffect: {
+    position: 'absolute',
+    top: -10,
+    left: -10,
+    width: '150%',
+    height: '100%',
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    transform: [{ rotate: '45deg' }],
   },
 });

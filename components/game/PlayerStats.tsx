@@ -31,7 +31,7 @@ function Bar({ value, max, fillColor, bgColor, glowColor, showShine }: {
   useEffect(() => {
     if (showShine) {
       shineX.value = withRepeat(
-        withTiming(100, { duration: 2000, easing: Easing.linear }),
+        withTiming(100, { duration: 1500, easing: Easing.linear }),
         -1,
         false
       );
@@ -47,13 +47,17 @@ function Bar({ value, max, fillColor, bgColor, glowColor, showShine }: {
   }));
 
   const barGlow = Platform.OS === 'web'
-    ? { boxShadow: `0 0 12px ${glowColor}88` }
-    : {};
+    ? { boxShadow: `0 0 15px ${glowColor}aa` }
+    : {
+        shadowColor: glowColor,
+        shadowRadius: 8,
+        shadowOpacity: 0.6,
+      };
   return (
     <View style={[styles.barBg, { backgroundColor: bgColor }]}>
       <Animated.View style={[styles.barFill, { backgroundColor: fillColor }, fillStyle, barGlow]}>
         <LinearGradient
-          colors={['rgba(255,255,255,0.3)', 'rgba(255,255,255,0)', 'rgba(0,0,0,0.2)']}
+          colors={['rgba(255,255,255,0.4)', 'rgba(255,255,255,0.1)', 'rgba(0,0,0,0.3)']}
           start={{ x: 0, y: 0 }}
           end={{ x: 0, y: 1 }}
           style={StyleSheet.absoluteFill}

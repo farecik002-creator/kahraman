@@ -72,17 +72,20 @@ export default function GameScreen() {
   return (
     <View style={styles.root}>
       <LinearGradient
-        colors={['#040710', '#060b14', '#080e1a', '#040710']}
-        locations={[0, 0.3, 0.7, 1]}
+        colors={['#020408', '#050810', '#0a1018', '#020408']}
+        locations={[0, 0.4, 0.7, 1]}
         style={StyleSheet.absoluteFill}
       />
+      
+      {/* Cinematic Vignette */}
       <LinearGradient
-        colors={['#1a040400', '#00000000', '#1a040400']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
+        colors={['rgba(0,0,0,0.8)', 'transparent', 'transparent', 'rgba(0,0,0,0.8)']}
         style={StyleSheet.absoluteFill}
         pointerEvents="none"
       />
+
+      {/* Warm Magic Light Source */}
+      <View style={styles.lightSource} pointerEvents="none" />
 
       <ParticleSystem width={width} height={height} />
 
@@ -254,5 +257,15 @@ const styles = StyleSheet.create({
   },
   gridInner: {
     width: '100%',
+  },
+  lightSource: {
+    position: 'absolute',
+    top: -100,
+    right: -100,
+    width: 400,
+    height: 400,
+    borderRadius: 200,
+    backgroundColor: 'rgba(255, 204, 51, 0.05)',
+    ...(Platform.OS === 'web' ? { filter: 'blur(80px)' } : {}),
   },
 });

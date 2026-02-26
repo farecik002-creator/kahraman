@@ -92,15 +92,15 @@ export function CharacterPanel({ combo, lastSkillUsed, width, height }: Characte
   }));
 
   const glowStyle = useAnimatedStyle(() => {
-    let color = '#d4af37';
-    if (glowColor.value === 1) color = '#44ff88';
-    else if (glowColor.value === 2) color = '#ff4444';
-    else if (combo >= 5) color = '#ffdd00';
-    else if (combo >= 3) color = '#d4af37';
     return {
       opacity: Math.max(glowOpacity.value, skillFlash.value),
     };
   });
+
+  const auraStyle = useAnimatedStyle(() => ({
+    opacity: withTiming(combo >= 3 ? 0.3 : 0, { duration: 500 }),
+    transform: [{ scale: withRepeat(withTiming(1.2, { duration: 2000 }), -1, true) }],
+  }));
 
   const glowColorStyle = useAnimatedStyle(() => {
     if (glowColor.value === 1) {
@@ -110,20 +110,25 @@ export function CharacterPanel({ combo, lastSkillUsed, width, height }: Characte
     } else if (combo >= 5) {
       return { borderColor: '#ffdd00' };
     } else if (combo >= 3) {
-      return { borderColor: '#d4af37' };
+      return { borderColor: '#ffcc33' };
     }
     return { borderColor: '#8b6914' };
   });
 
   const borderGlowShadow = Platform.OS === 'web'
-    ? (combo >= 3 ? { boxShadow: '0 0 20px #d4af3780' } : {})
-    : {};
+    ? (combo >= 3 ? { boxShadow: `0 0 30px ${combo >= 5 ? '#ffcc33' : '#ffcc3380'}` } : {})
+    : {
+        shadowColor: '#ffcc33',
+        shadowRadius: combo >= 5 ? 20 : 10,
+        shadowOpacity: combo >= 3 ? 0.6 : 0,
+      };
 
   return (
     <Animated.View style={[styles.container, { width, height }, glowColorStyle, borderGlowShadow]}>
+      <Animated.View style={[styles.aura, auraStyle]} />
       <Animated.View style={[styles.characterWrap, characterStyle]}>
         <View style={styles.fallbackIcon}>
-          <MaterialCommunityIcons name="shield-sword" size={Math.floor(width * 0.55)} color="#d4af37" />
+          <MaterialCommunityIcons name="shield-sword" size={Math.floor(width * 0.55)} color="#ffcc33" />
         </View>
         <Image
           source={require('../../assets/images/knight.png')}
@@ -181,7 +186,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: '#d4af37',
+    backgroundColor: '#ffcc33',
   },
   glowGreen: {
     backgroundColor: '#44ff88',
@@ -193,7 +198,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffdd00',
   },
   glowDimGold: {
-    backgroundColor: '#d4af37',
+    backgroundColor: '#ffcc33',
   },
   comboBadge: {
     position: 'absolute',
@@ -201,18 +206,30 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     alignItems: 'center',
+    zIndex: 10,
   },
   comboText: {
-    color: '#d4af37',
-    fontSize: 11,
+    color: '#ffcc33',
+    fontSize: 14,
     fontWeight: '900',
-    letterSpacing: 1.5,
-    textShadowColor: '#000',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 4,
+    letterSpacing: 2,
+    textShadowColor: 'rgba(0,0,0,0.8)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 6,
   },
   comboTextHot: {
     color: '#ffdd00',
-    fontSize: 12,
+    fontSize: 16,
+    textShadowColor: '#ffcc3388',
+  },
+  aura: {
+    position: 'absolute',
+    top: -50,
+    left: -50,
+    right: -50,
+    bottom: -50,
+    borderRadius: 1000,
+    backgroundColor: '#ffcc33',
+    zIndex: -1,
   },
 });
