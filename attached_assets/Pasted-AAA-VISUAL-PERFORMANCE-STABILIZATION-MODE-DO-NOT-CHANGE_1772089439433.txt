@@ -1,0 +1,102 @@
+AAA VISUAL + PERFORMANCE STABILIZATION MODE
+DO NOT CHANGE GAME LOGIC
+DO NOT MODIFY CORE SYSTEMS
+ONLY IMPROVE VISUALS + PERFORMANCE + EXPO STABILITY
+
+GOAL:
+Make the game look like a premium mobile fantasy puzzle RPG
+while keeping stable 60 FPS in Expo Go.
+
+========================================
+PART 1 — PERFORMANCE FIX (CRITICAL)
+========================================
+
+1) Optimize all grid rendering:
+   - Use memoization (React.memo / useMemo / useCallback)
+   - Prevent unnecessary re-renders
+   - Avoid inline object creation inside render loops
+   - Avoid anonymous functions inside map
+
+2) Use Reanimated or native driver for animations
+   - Enable useNativeDriver: true
+   - Avoid heavy JS thread animations
+
+3) Reduce shadow performance cost:
+   - Replace heavy shadow props with lighter elevation where possible
+   - Avoid multiple layered shadows
+
+4) Optimize particle effects:
+   - Limit particle count
+   - Disable particles on low FPS
+   - Use lightweight opacity animations
+
+5) Ensure constant 60 FPS:
+   - Remove blocking console logs
+   - Remove unnecessary state updates
+   - Batch state updates
+   - Avoid deep object cloning inside loops
+
+========================================
+PART 2 — AAA VISUAL TRANSFORMATION
+========================================
+
+Make UI similar to premium fantasy RPG:
+
+GRID:
+- Add inner gradient
+- Add glossy highlight
+- Add soft outer glow by color
+- Add subtle shadow for depth
+- Add smooth falling animation (easing)
+- Add glow pulse on match
+- Add sparkle burst on destroy
+- Use vibrant jewel colors
+
+HP & EXP BARS:
+- Add golden frame
+- Add gradient fill
+- Add soft glow
+- Add smooth animated transitions
+- Add slight shine sweep animation
+
+UI:
+- Warm golden accents
+- Magical particle background
+- Rich fantasy colors
+- Soft cinematic vignette
+- Subtle bloom effect
+
+========================================
+PART 3 — EXPO GO STABILITY FIX
+========================================
+
+Fix Expo startup issues:
+
+1) Ensure no port conflicts
+2) Remove duplicate server startups
+3) Ensure no infinite loops on mount
+4) Clear metro cache compatibility
+5) Remove any synchronous heavy code in root component
+6) Avoid blocking useEffect loops
+7) Ensure no async memory leaks
+
+Ensure:
+- npx expo start --clear works without errors
+- Expo Go opens without crash
+- No red screen errors
+- No bundler freeze
+
+========================================
+FINAL CHECK
+========================================
+
+✔ 60 FPS stable
+✔ No frame drops during combo
+✔ No Expo crash
+✔ No red screen
+✔ No port conflict
+✔ Premium fantasy look
+✔ Smooth animations
+✔ No gameplay changes
+
+Apply changes directly.
