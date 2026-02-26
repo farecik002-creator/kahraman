@@ -7,6 +7,7 @@ import Animated, {
   withSequence,
   withTiming,
   withDelay,
+  Easing,
 } from 'react-native-reanimated';
 
 interface ParticleConfig {

@@ -1,0 +1,21 @@
+Something went wrong
+Please reload the app to continue.
+Try Again
+Made with Replit
+
+Error Details
+
+Error: Easing is not defined
+
+Stack Trace:
+ReferenceError: Easing is not defined
+    at t1 (https://a62c0388-42fd-4c66-92f3-69ed6d020e39-00-22xm0yuatxl35.pike.replit.dev/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&transform.reactCompiler=true&unstable_transformProfile=hermes-stable:162098:19)
+    at react-stack-bottom-frame (https://a62c0388-42fd-4c66-92f3-69ed6d020e39-00-22xm0yuatxl35.pike.replit.dev/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&transform.reactCompiler=true&unstable_transformProfile=hermes-stable:16716:20)
+    at runWithFiberInDEV (https://a62c0388-42fd-4c66-92f3-69ed6d020e39-00-22xm0yuatxl35.pike.replit.dev/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&transform.reactCompiler=true&unstable_transformProfile=hermes-stable:4635:70)
+    at commitHookEffectListMount (https://a62c0388-42fd-4c66-92f3-69ed6d020e39-00-22xm0yuatxl35.pike.replit.dev/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&transform.reactCompiler=true&unstable_transformProfile=hermes-stable:9625:620)
+    at commitHookPassiveMountEffects (https://a62c0388-42fd-4c66-92f3-69ed6d020e39-00-22xm0yuatxl35.pike.replit.dev/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&transform.reactCompiler=true&unstable_transformProfile=hermes-stable:9662:58)
+    at reconnectPassiveEffects (https://a62c0388-42fd-4c66-92f3-69ed6d020e39-00-22xm0yuatxl35.pike.replit.dev/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&transform.reactCompiler=true&unstable_transformProfile=hermes-stable:10618:11)
+    at recursivelyTraverseReconnectPassiveEffects (https://a62c0388-42fd-4c66-92f3-69ed6d020e39-00-22xm0yuatxl35.pike.replit.dev/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&transform.reactCompiler=true&unstable_transformProfile=hermes-stable:10609:68)
+    at reconnectPassiveEffects (https://a62c0388-42fd-4c66-92f3-69ed6d020e39-00-22xm0yuatxl35.pike.replit.dev/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&transform.reactCompiler=true&unstable_transformProfile=hermes-stable:10632:11)
+    at recursivelyTraverseReconnectPassiveEffects (https://a62c0388-42fd-4c66-92f3-69ed6d020e39-00-22xm0yuatxl35.pike.replit.dev/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&transform.reactCompiler=true&unstable_transformProfile=hermes-stable:10609:68)
+    at reconnectPassiveEffects (https://a62c0388-42fd-4c66-92f3-69ed6d020e39-00-22xm0yuatxl35.pike.replit.dev/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=app&transform.reactCompiler=true&unstable_transformProfile=hermes-stable:10617:11)
