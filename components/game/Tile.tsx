@@ -97,26 +97,26 @@ export function Tile({ type, selected, matched, isNew, size, tileHeight, row, co
   const cfg = TILE_CONFIG[type];
   const iconSize = Math.floor(size * 0.48);
 
-  const glowStrength = selected ? 18 : 6;
-  const glowColor = selected ? '#d4af37' : cfg.glow;
+  const glowStrength = selected ? 24 : 10;
+  const glowColor = selected ? '#ffcc33' : cfg.glow;
 
   const shadowStyle = Platform.OS === 'web'
     ? { 
-        boxShadow: `0 4px 8px rgba(0,0,0,0.5), 0 0 ${glowStrength}px ${glowColor}${selected ? 'aa' : '44'}, inset 0 0 10px rgba(255,255,255,0.1)`,
+        boxShadow: `0 6px 12px rgba(0,0,0,0.6), 0 0 ${glowStrength}px ${glowColor}${selected ? 'cc' : '66'}, inset 0 0 15px rgba(255,255,255,0.15)`,
       }
     : {
         shadowColor: glowColor,
         shadowRadius: glowStrength,
-        shadowOpacity: selected ? 0.8 : 0.4,
-        shadowOffset: { width: 0, height: 2 },
-        elevation: selected ? 12 : 4,
+        shadowOpacity: selected ? 0.9 : 0.5,
+        shadowOffset: { width: 0, height: 4 },
+        elevation: selected ? 16 : 6,
       };
 
   return (
     <Pressable
       onPress={onPress}
       onPressIn={() => {
-        pressScale.value = withTiming(0.95, { duration: 100 });
+        pressScale.value = withTiming(0.9, { duration: 100 });
       }}
       onPressOut={() => {
         pressScale.value = withSpring(1);
@@ -127,12 +127,12 @@ export function Tile({ type, selected, matched, isNew, size, tileHeight, row, co
         style={[
           styles.tile,
           {
-            width: size - 3,
-            height: finalHeight - 3,
-            borderRadius: 12,
+            width: size - 4,
+            height: finalHeight - 4,
+            borderRadius: 14,
             backgroundColor: cfg.bg,
-            borderColor: selected ? '#d4af37' : cfg.border,
-            borderWidth: selected ? 3 : 1.5,
+            borderColor: selected ? '#ffcc33' : cfg.border,
+            borderWidth: selected ? 3.5 : 2,
           },
           shadowStyle,
           animStyle,

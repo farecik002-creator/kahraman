@@ -217,22 +217,23 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   gameTitle: {
-    color: '#d4af37',
-    fontSize: 18,
+    color: '#ffcc33',
+    fontSize: 22,
     fontWeight: '900',
-    letterSpacing: 6,
+    letterSpacing: 8,
+    textTransform: 'uppercase',
     ...(Platform.OS === 'web'
-      ? { textShadow: '0 0 12px #d4af3788' }
+      ? { textShadow: '0 0 15px rgba(255, 204, 51, 0.6)' }
       : {
-          textShadowColor: '#d4af3766',
+          textShadowColor: 'rgba(255, 204, 51, 0.6)',
           textShadowOffset: { width: 0, height: 0 },
-          textShadowRadius: 12,
+          textShadowRadius: 15,
         }),
   },
   middleRow: {
     flex: 1,
     flexDirection: 'row',
-    gap: 8,
+    gap: 12,
     alignItems: 'flex-start',
   },
   boardColumn: {
@@ -241,17 +242,17 @@ const styles = StyleSheet.create({
   },
   gridContainer: {
     position: 'relative',
-    borderWidth: 1.5,
-    borderColor: '#3a2a08',
-    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: '#8b6914',
+    borderRadius: 16,
     backgroundColor: '#030508',
     overflow: 'hidden',
     ...(Platform.OS === 'web'
-      ? { boxShadow: '0 0 25px #d4af3715, inset 0 0 40px #000000aa' }
+      ? { boxShadow: '0 0 40px rgba(255, 204, 51, 0.15), inset 0 0 60px #000000' }
       : {
-          shadowColor: '#d4af37',
-          shadowRadius: 10,
-          shadowOpacity: 0.2,
+          shadowColor: '#ffcc33',
+          shadowRadius: 20,
+          shadowOpacity: 0.3,
           shadowOffset: { width: 0, height: 0 },
         }),
   },

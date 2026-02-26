@@ -20,43 +20,26 @@ interface CharacterPanelProps {
 }
 
 export function CharacterPanel({ combo, lastSkillUsed, width, height }: CharacterPanelProps) {
-  const breathScale = useSharedValue(1);
   const glowOpacity = useSharedValue(0);
   const glowColor = useSharedValue(0);
-  const shakeX = useSharedValue(0);
   const skillFlash = useSharedValue(0);
+  const mistOffset = useSharedValue(0);
 
   useEffect(() => {
-    breathScale.value = withRepeat(
-      withSequence(
-        withTiming(1.028, { duration: 2400, easing: Easing.inOut(Easing.sin) }),
-        withTiming(0.974, { duration: 2400, easing: Easing.inOut(Easing.sin) })
-      ),
+    mistOffset.value = withRepeat(
+      withTiming(width, { duration: 10000, easing: Easing.linear }),
       -1,
       false
     );
-  }, []);
+  }, [width]);
 
   useEffect(() => {
     if (combo >= 5) {
       glowOpacity.value = withTiming(0.85, { duration: 300 });
-      shakeX.value = withRepeat(
-        withSequence(
-          withTiming(-4, { duration: 60 }),
-          withTiming(4, { duration: 60 }),
-          withTiming(-3, { duration: 60 }),
-          withTiming(3, { duration: 60 }),
-          withTiming(0, { duration: 60 })
-        ),
-        3,
-        false
-      );
     } else if (combo >= 3) {
       glowOpacity.value = withTiming(0.45, { duration: 400 });
-      shakeX.value = 0;
     } else {
       glowOpacity.value = withTiming(0, { duration: 600 });
-      shakeX.value = 0;
     }
   }, [combo]);
 
@@ -84,64 +67,64 @@ export function CharacterPanel({ combo, lastSkillUsed, width, height }: Characte
     }
   }, [lastSkillUsed]);
 
-  const characterStyle = useAnimatedStyle(() => ({
-    transform: [
-      { scale: breathScale.value },
-      { translateX: shakeX.value },
-    ],
-  }));
-
-  const glowStyle = useAnimatedStyle(() => {
-    return {
-      opacity: Math.max(glowOpacity.value, skillFlash.value),
-    };
-  });
-
   const auraStyle = useAnimatedStyle(() => ({
     opacity: withTiming(combo >= 3 ? 0.3 : 0, { duration: 500 }),
-    transform: [{ scale: withRepeat(withTiming(1.2, { duration: 2000 }), -1, true) }],
+    transform: [{ scale: withRepeat(withTiming(1.4, { duration: 3000 }), -1, true) }],
   }));
 
   const glowColorStyle = useAnimatedStyle(() => {
-    if (glowColor.value === 1) {
-      return { borderColor: '#44ff88' };
-    } else if (glowColor.value === 2) {
-      return { borderColor: '#ff4444' };
-    } else if (combo >= 5) {
-      return { borderColor: '#ffdd00' };
-    } else if (combo >= 3) {
-      return { borderColor: '#ffcc33' };
-    }
+    if (glowColor.value === 1) return { borderColor: '#44ff88' };
+    if (glowColor.value === 2) return { borderColor: '#ff4444' };
+    if (combo >= 5) return { borderColor: '#ffdd00' };
+    if (combo >= 3) return { borderColor: '#ffcc33' };
     return { borderColor: '#8b6914' };
   });
 
+  const mistStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: mistOffset.value }],
+  }));
+
   const borderGlowShadow = Platform.OS === 'web'
-    ? (combo >= 3 ? { boxShadow: `0 0 30px ${combo >= 5 ? '#ffcc33' : '#ffcc3380'}` } : {})
+    ? (combo >= 3 ? { boxShadow: `0 0 40px ${combo >= 5 ? '#ffcc33' : '#ffcc3380'}` } : {})
     : {
         shadowColor: '#ffcc33',
-        shadowRadius: combo >= 5 ? 20 : 10,
-        shadowOpacity: combo >= 3 ? 0.6 : 0,
+        shadowRadius: combo >= 5 ? 25 : 15,
+        shadowOpacity: combo >= 3 ? 0.8 : 0,
       };
 
   return (
     <Animated.View style={[styles.container, { width, height }, glowColorStyle, borderGlowShadow]}>
+      {/* Background Magical Atmosphere */}
+      <LinearGradient
+        colors={['#05080f', '#0a1018', '#05080f']}
+        style={StyleSheet.absoluteFill}
+      />
+      
+      {/* Animated Aura */}
       <Animated.View style={[styles.aura, auraStyle]} />
-      <Animated.View style={[styles.characterWrap, characterStyle]}>
-        <View style={styles.fallbackIcon}>
-          <MaterialCommunityIcons name="shield-sword" size={Math.floor(width * 0.55)} color="#ffcc33" />
-        </View>
-        <Image
-          source={require('../../assets/images/knight.png')}
-          style={[StyleSheet.absoluteFill, { width: width - 8, height: height - 8 }]}
-          contentFit="cover"
-          transition={400}
+      
+      {/* Magical Mist */}
+      <Animated.View style={[styles.mist, mistStyle]}>
+        <LinearGradient
+          colors={['transparent', 'rgba(255,255,255,0.03)', 'transparent']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={StyleSheet.absoluteFill}
         />
       </Animated.View>
+
+      {/* Light Rays Effect */}
+      <View style={styles.lightRays} pointerEvents="none">
+        <LinearGradient
+          colors={['rgba(255,204,51,0.05)', 'transparent']}
+          style={StyleSheet.absoluteFill}
+        />
+      </View>
 
       <Animated.View
         style={[
           styles.glowOverlay,
-          glowStyle,
+          { opacity: Math.max(glowOpacity.value, skillFlash.value) },
           lastSkillUsed === 'heal' && styles.glowGreen,
           lastSkillUsed === 'crit' && styles.glowRed,
           !lastSkillUsed && combo >= 5 && styles.glowGold,
@@ -163,22 +146,12 @@ export function CharacterPanel({ combo, lastSkillUsed, width, height }: Characte
 
 const styles = StyleSheet.create({
   container: {
-    borderWidth: 1.5,
+    borderWidth: 2,
     borderColor: '#8b6914',
-    borderRadius: 12,
+    borderRadius: 16,
     overflow: 'hidden',
     backgroundColor: '#05080f',
     position: 'relative',
-  },
-  characterWrap: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  fallbackIcon: {
-    position: 'absolute',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   glowOverlay: {
     position: 'absolute',
@@ -202,7 +175,7 @@ const styles = StyleSheet.create({
   },
   comboBadge: {
     position: 'absolute',
-    bottom: 8,
+    bottom: 12,
     left: 0,
     right: 0,
     alignItems: 'center',
@@ -210,26 +183,41 @@ const styles = StyleSheet.create({
   },
   comboText: {
     color: '#ffcc33',
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: '900',
     letterSpacing: 2,
     textShadowColor: 'rgba(0,0,0,0.8)',
     textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 6,
+    textShadowRadius: 8,
   },
   comboTextHot: {
     color: '#ffdd00',
-    fontSize: 16,
-    textShadowColor: '#ffcc3388',
+    fontSize: 20,
+    textShadowColor: '#ffcc33aa',
   },
   aura: {
     position: 'absolute',
-    top: -50,
-    left: -50,
-    right: -50,
-    bottom: -50,
+    top: '20%',
+    left: '10%',
+    right: '10%',
+    bottom: '20%',
     borderRadius: 1000,
-    backgroundColor: '#ffcc33',
-    zIndex: -1,
+    backgroundColor: 'rgba(255, 204, 51, 0.1)',
+  },
+  mist: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: -200,
+    width: 400,
+    opacity: 0.5,
+  },
+  lightRays: {
+    position: 'absolute',
+    top: -50,
+    right: -50,
+    width: 200,
+    height: 400,
+    transform: [{ rotate: '45deg' }],
   },
 });
